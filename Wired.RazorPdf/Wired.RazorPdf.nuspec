@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>$id$</id>
+		<version>$version$</version>
+		<title>$title$</title>
+		<authors>$author$</authors>
+		<owners>$author$</owners>
+		<iconUrl>http://david.glass/w-logo.png</iconUrl>
+		<licenseUrl>https://github.com/WiredUK/Wired.Razor/blob/master/LICENSE</licenseUrl>
+		<projectUrl>https://github.com/WiredUK/Wired.Razor</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>$description$</description>
+		<releaseNotes>Initial release.</releaseNotes>
+		<copyright>Copyright 2016</copyright>
+		<tags>Razor PDF</tags>
+		<dependencies>
+			<dependency id="Wired.Razor" version="0.9" />    
+		</dependencies>
+	</metadata>
+</package>
