@@ -1,0 +1,16 @@
+﻿@model Wired.Razor.MvcSample.Models.DemonstrationModel
+
+@{
+    Layout = "~/Views/Shared/_PdfLayout.cshtml";
+}
+
+<h1>PDF With Layout</h1>
+
+@foreach (var person in Model.People)
+{
+    <div>
+        Person: @person
+    </div>
+}
+
+<img src="~/Images/awesome.jpg" style="width: 680px; height: 383px;" alt="The most awesomest image ever" />

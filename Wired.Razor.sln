@@ -5,6 +5,12 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wired.Razor", "Wired.Razor\Wired.Razor.csproj", "{27BD6102-78A0-48CD-ABB6-F54F25C2BD13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wired.RazorPdf", "Wired.RazorPdf\Wired.RazorPdf.csproj", "{FED086D2-CD23-4E30-9E3E-D09808026F0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wired.Razor.MvcSample", "Wired.Razor.MvcSample\Wired.Razor.MvcSample.csproj", "{70AF5419-0CBC-460B-B6EB-00A0C3533F45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{4CBDE4F8-2D5A-4F48-A6F8-10E540DD710A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +21,20 @@ Global
 		{27BD6102-78A0-48CD-ABB6-F54F25C2BD13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27BD6102-78A0-48CD-ABB6-F54F25C2BD13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27BD6102-78A0-48CD-ABB6-F54F25C2BD13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FED086D2-CD23-4E30-9E3E-D09808026F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FED086D2-CD23-4E30-9E3E-D09808026F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FED086D2-CD23-4E30-9E3E-D09808026F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FED086D2-CD23-4E30-9E3E-D09808026F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70AF5419-0CBC-460B-B6EB-00A0C3533F45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70AF5419-0CBC-460B-B6EB-00A0C3533F45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70AF5419-0CBC-460B-B6EB-00A0C3533F45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70AF5419-0CBC-460B-B6EB-00A0C3533F45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{27BD6102-78A0-48CD-ABB6-F54F25C2BD13} = {4CBDE4F8-2D5A-4F48-A6F8-10E540DD710A}
+		{FED086D2-CD23-4E30-9E3E-D09808026F0D} = {4CBDE4F8-2D5A-4F48-A6F8-10E540DD710A}
 	EndGlobalSection
 EndGlobal

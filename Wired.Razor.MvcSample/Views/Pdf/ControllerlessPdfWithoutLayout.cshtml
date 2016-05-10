@@ -1,0 +1,26 @@
+﻿@model Wired.Razor.MvcSample.Models.DemonstrationModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PDF Without Layout</title>
+</head>
+<body>
+    <h1>PDF Without Layout</h1>
+
+    @foreach (var person in Model.People)
+    {
+        <div>
+            Person: @person
+        </div>
+    }
+
+    <img src="~/Images/awesome.jpg" style="width: 680px; height: 383px;" alt="The most awesomest image ever" />
+</body>
+</html>

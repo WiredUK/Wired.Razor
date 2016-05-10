@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>PDF Generator Demo</h1>
+    <p class="lead">Let's make some PDFs!</p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h2>PDF Without Layout</h2>
+        @Html.ActionLink("Generate", "PdfWithoutLayout", "Pdf")
+    </div>
+    <div class="col-md-3">
+        <h2>PDF With Layout</h2>
+        @Html.ActionLink("Generate", "PdfWithLayout", "Pdf")
+    </div>
+    <div class="col-md-3">
+        <h2>Controllerless PDF Without Layout</h2>
+        @Html.ActionLink("Generate", "ControllerlessPdfWithoutLayout", "Pdf")
+    </div>
+    <div class="col-md-3">
+        <h2>Controllerless PDF With Layout</h2>
+        @Html.ActionLink("Generate", "ControllerlessPdfWithLayout", "Pdf")
+    </div>
+</div>
