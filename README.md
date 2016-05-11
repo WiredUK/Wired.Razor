@@ -112,7 +112,11 @@ As this will automatically set debug on in your testing environment, but when yo
 
 #Didn't you say something about PDFs?#
 
-Of course I did, and here's how you do it. So there's 2 different ways here. They both essentially do the same thing but one of them relies on an MVC `ControllerContext`. This means it works great in your MVC app, but if you want to farm out your PDF generation to a service or a background job using something like the awesome [Hangfire](http://hangfire.io/), then you need to be able to do everything standalone.
+Of course I did, and here's how you do it. First you will need the [Nuget package](https://www.nuget.org/packages/Wired.RazorPdf) by using the Nuget Package Manager in Visual Studio or running this in the package manager console:
+
+    Install-Package Wired.RazorPdf
+
+So there's 2 different ways here. They both essentially do the same thing but one of them relies on an MVC `ControllerContext`. This means it works great in your MVC app, but if you want to farm out your PDF generation to a service or a background job using something like the awesome [Hangfire](http://hangfire.io/), then you need to be able to do everything standalone.
 
 The benefit of using the MVC bound version is that you get the nice helpers that MVC provides you with. So things like `@Html.ActionLink(...)`, `@Url.Action(...)` etc.
 
