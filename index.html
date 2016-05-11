@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Wired.razor by WiredUK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Wired.razor</h1>
+      <h2 class="project-tagline">A library for parsing Razor without relying on an MVC context and for exporting views as PDF</h2>
+      <a href="https://github.com/WiredUK/Wired.Razor" class="btn">View on GitHub</a>
+      <a href="https://github.com/WiredUK/Wired.Razor/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/WiredUK/Wired.Razor/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="wiredrazor" class="anchor" href="#wiredrazor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Wired.Razor</h1>
+
+<p>A library for parsing Razor in an MVC app, and also if needed without relying on an MVC context. Additionally a library for exporting views as PDF files.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<ol>
+<li>
+<p>Add a reference to this library (duh!) by either:</p>
+
+<p>a. Downloading this codebase and compiling it, or instead I recommend;</p>
+
+<p>b. Use the <a href="https://www.nuget.org/packages/Wired.Razor">Nuget package</a> by using the Nuget Package Manager in Visual Studio or running this in the package manager console:</p>
+
+<pre><code>Install-Package Wired.Razor
+</code></pre>
+</li>
+<li>
+<p>Create an instance of the parser:</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">using</span> Wired.Razor<span class="pl-k">;</span>
+
+<span class="pl-c">//This can go anywhere, or preferably be injected</span>
+<span class="pl-k">var</span> parser = <span class="pl-k">new</span> Parser();</pre></div>
+</li>
+<li>
+<p>Now assuming you have a model like this:</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">FoodModel</span>
+{
+  <span class="pl-k">public</span> <span class="pl-k">string</span> <span class="pl-en">FoodName</span> { <span class="pl-k">get</span>; <span class="pl-k">set</span>; }
+}</pre></div>
+</li>
+<li>
+<p>And a view like this:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>@model MyApp.FoodModel
+
+&lt;<span class="pl-ent">p</span>&gt;Hello, this is my view and my favourite food is @Model.FoodName&lt;/<span class="pl-ent">p</span>&gt;</pre></div>
+</li>
+<li>
+<p>You can get your rendered output like this:</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-c">//Create our model</span>
+<span class="pl-k">var</span> model = <span class="pl-k">new</span> FoodModel
+{
+  FoodName = <span class="pl-s"><span class="pl-pds">"</span>Cheese<span class="pl-pds">"</span></span>
+};
+
+<span class="pl-c">//Render the view</span>
+<span class="pl-k">var</span> renderedView = parser.RenderView(viewName, model);</pre></div>
+</li>
+</ol>
+
+<p>Easy enough right?</p>
+
+<h2>
+<a id="something-a-bit-more-complicated" class="anchor" href="#something-a-bit-more-complicated" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Something a bit more complicated</h2>
+
+<p>Well life is never quite that simple is it? One thing that RazorEngine needs help with is locating any layout files you have. As it has no MVC context, that means there is no View engine to tell it where to look for layouts and such. So we get around that by telling the Wired.Razor exactly what it needs. So if we have a (slightly) more advanced view like this:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>@model MyApp.FoodModel
+@{
+  Layout = "~/Shared/_Layout.cshtml";
+}
+
+Hello, this is my view and my favourite food is @Model.FoodName</pre></div>
+
+<p>We need change our call to this:</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-c">//Create our model</span>
+<span class="pl-k">var</span> model = <span class="pl-k">new</span> FoodModel
+{
+  FoodName = <span class="pl-s"><span class="pl-pds">"</span>Cheese<span class="pl-pds">"</span></span>
+};
+
+<span class="pl-c">//Set up the templates</span>
+<span class="pl-k">var</span> templates = <span class="pl-k">new</span> List&lt;Template&gt;
+{
+  <span class="pl-k">new</span> Template
+  {
+    Name = <span class="pl-s"><span class="pl-pds">"</span>~/Views/Shared/_Layout.cshtml<span class="pl-pds">"</span></span>,
+    Source = System.IO.File.ReadAllText(Server.MapPath(<span class="pl-s"><span class="pl-pds">"</span>~/Views/Shared/_Layout.cshtml<span class="pl-pds">"</span></span>))
+  }
+};
+
+<span class="pl-c">//Render the view</span>
+<span class="pl-k">var</span> renderedView = parser.RenderView(viewName, model);</pre></div>
+
+<h2>
+<a id="what-next" class="anchor" href="#what-next" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What Next?</h2>
+
+<p>Well that's up to you. You can use this approach to build email content for your website. Fed up of writing HTML and doing some weird things with string concatenation? Use Wired.Razor to simplify that process. And as the file it uses are Razor templates, you don't need to recompile your app when the sales director comes to you and says "Hey man, I've been talking to the guys at Initrode and they asked if we could make the emails look purple on Fridays. I told them we can do that as we're a forward thinking dynamic company. So I'm gonna need you to come in on Saturday to make this work mmkay?" Well now you just tweak your templates, tell your boss you worked all Saturday while you were really <em>home with family</em> | <em>partying with friends</em> | <em>playing videogames</em>.</p>
+
+<h2>
+<a id="bonus-round" class="anchor" href="#bonus-round" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bonus Round!</h2>
+
+<p>If you do this:</p>
+
+<div class="highlight highlight-source-cs"><pre>parser.Debug = <span class="pl-c1">true</span>;</pre></div>
+
+<p>Then you can fire up Visual Studio, press F5 and step through your views as they are parsed, just like you would for any other view in your project. Just remember to turn it off for production as it's not optimised when in debug mode. I would actually recommend doing this:</p>
+
+<div class="highlight highlight-source-cs"><pre>#if <span class="pl-en">DEBUG</span>
+parser.Debug = <span class="pl-c1">true</span>;
+#endif</pre></div>
+
+<p>As this will automatically set debug on in your testing environment, but when you compile it for release mode, it'll be back to it's usual speedy self.</p>
+
+<h1>
+<a id="didnt-you-say-something-about-pdfs" class="anchor" href="#didnt-you-say-something-about-pdfs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Didn't you say something about PDFs?</h1>
+
+<p>Of course I did, and here's how you do it. So there's 2 different ways here. They both essentially do the same thing but one of them relies on an MVC <code>ControllerContext</code>. This means it works great in your MVC app, but if you want to farm out your PDF generation to a service or a background job using something like the awesome <a href="http://hangfire.io/">Hangfire</a>, then you need to be able to do everything standalone.</p>
+
+<p>The benefit of using the MVC bound version is that you get the nice helpers that MVC provides you with. So things like <code>@Html.ActionLink(...)</code>, <code>@Url.Action(...)</code> etc.</p>
+
+<h2>
+<a id="using-mvc" class="anchor" href="#using-mvc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using MVC</h2>
+
+<p>So inside an MVC action, it's simple:</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">public</span> ActionResult Index()
+{
+  <span class="pl-k">var</span> generator = <span class="pl-k">new</span> MvcGenerator(ControllerContext);
+  <span class="pl-k">var</span> pdf = generator.GeneratePdf(model, <span class="pl-s"><span class="pl-pds">"</span>PdfView<span class="pl-pds">"</span></span>);
+  <span class="pl-k">return</span> <span class="pl-k">new</span> FileContentResult(pdf, <span class="pl-s"><span class="pl-pds">"</span>application/pdf<span class="pl-pds">"</span></span>);
+}</pre></div>
+
+<h2>
+<a id="standalone" class="anchor" href="#standalone" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Standalone</h2>
+
+<p>Only slightly different really: </p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">public</span> ActionResult Index()
+{
+  <span class="pl-k">var</span> generator = <span class="pl-k">new</span> StandaloneGenerator(<span class="pl-k">new</span> Parser());
+  <span class="pl-k">var</span> pdf = generator.GeneratePdf(model, Server.MapPath(<span class="pl-s"><span class="pl-pds">"</span>~/Views/Pdf/ControllerlessPdfWithoutLayout.cshtml<span class="pl-pds">"</span></span>));
+  <span class="pl-k">return</span> <span class="pl-k">new</span> FileContentResult(pdf, <span class="pl-s"><span class="pl-pds">"</span>application/pdf<span class="pl-pds">"</span></span>);
+}</pre></div>
+
+<p>The difference here is that you are giving the generator an instance of the aformentioned Wired.Razor.Parser class instead of a <code>ControllerContext</code> and you specify the full path to the view file. Note that you still need to pass in the templates (<code>generator.Templates = ...</code>) as you did above.</p>
+
+<h2>
+<a id="what-else" class="anchor" href="#what-else" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What Else?</h2>
+
+<p>So, images are almost always a huge annoyance in this situation. How does the PDF engine (iTextSharp by the way) know where to get images from? In both the MVC generator and the standalone, there are constructors that take a value for <code>imageBasePath</code>. That's a string containing the base path for all images. So say you had in your view something like this:</p>
+
+<pre><code>&lt;img src="/images/next-weeks-lottery-numbers.jpg" /&gt;
+</code></pre>
+
+<p>Well you now need to instantiate the generator like this (in an MVC context):</p>
+
+<pre><code>var generator = new MvcGenerator(ControllerContext, , Server.MapPath("~"));
+</code></pre>
+
+<p>This causes your views to be rendered slightly differently, the above would become this:</p>
+
+<pre><code>&lt;img src="c:\Users\David\Documents\projects\MyApp\images\next-weeks-lottery-numbers.jpg" /&gt;
+</code></pre>
+
+<h2>
+<a id="anything-else" class="anchor" href="#anything-else" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Anything Else?</h2>
+
+<p>I suggest you just give it a try and see how you get on. If you discover a bug then submit an issue and I'll take a look at it. IF you fancy fixing it yourself or adding your own feature, then go right ahead and submit a pull request, I'd absolutely love that!</p>
+
+<p>Good luck!</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/WiredUK/Wired.Razor">Wired.razor</a> is maintained by <a href="https://github.com/WiredUK">WiredUK</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
