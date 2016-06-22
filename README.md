@@ -148,6 +148,24 @@ public ActionResult Index()
 
 The difference here is that you are giving the generator an instance of the aformentioned Wired.Razor.Parser class instead of a `ControllerContext` and you specify the full path to the view file. Note that you still need to pass in the templates (`generator.Templates = ...`) as you did above.
 
+##But I want my PDF output to look different!##
+
+We have you covered! all of the `GeneratePdf` methods have a second overload that lets you configure how your PDF is generated. For example, let's say you want landscape output, it's only a small change:
+
+```c#
+public ActionResult Index()
+{
+  var generator = new StandaloneGenerator(new Parser());
+  var pdf = generator.GeneratePdf(
+    (writer, document) =>
+    {
+        document.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
+    }, 	
+	model, Server.MapPath("~/Views/Pdf/ControllerlessPdfWithoutLayout.cshtml"));
+  return new FileContentResult(pdf, "application/pdf");
+}
+```
+
 ##What Else?##
 
 So, images are almost always a huge annoyance in this situation. How does the PDF engine (iTextSharp by the way) know where to get images from? In both the MVC generator and the standalone, there are constructors that take a value for `imageBasePath`. That's a string containing the base path for all images. So say you had in your view something like this:
