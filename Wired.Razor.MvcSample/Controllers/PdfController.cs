@@ -28,6 +28,20 @@ namespace Wired.Razor.MvcSample.Controllers
             return new FileContentResult(pdf, "application/pdf");
         }
 
+        public ActionResult LandscapeControllerlessPdfWithoutLayout()
+        {
+            var generator = new StandaloneGenerator(new Parser(), Server.MapPath("~"));
+            var pdf = generator.GeneratePdf(
+                (writer, document) =>
+                {
+                    document.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
+                }, 
+                GetModel(), 
+                Server.MapPath("~/Views/Pdf/ControllerlessPdfWithoutLayout.cshtml"));
+
+            return new FileContentResult(pdf, "application/pdf");
+        }
+
         public ActionResult ControllerlessPdfWithLayout()
         {
             var generator = new StandaloneGenerator(new Parser(), Server.MapPath("~"))
