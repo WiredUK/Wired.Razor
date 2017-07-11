@@ -1,7 +1,7 @@
-#Wired.Razor#
+# Wired.Razor #
 A library for parsing Razor in an MVC app, and also if needed without relying on an MVC context. Additionally a library for exporting views as PDF files.
 
-##Usage##
+## Usage ##
 
 1. Add a reference to this library (duh!) by either:
 
@@ -52,7 +52,7 @@ A library for parsing Razor in an MVC app, and also if needed without relying on
 
 Easy enough right?
 
-##Something a bit more complicated##
+## Something a bit more complicated ##
 
 Well life is never quite that simple is it? One thing that RazorEngine needs help with is locating any layout files you have. As it has no MVC context, that means there is no View engine to tell it where to look for layouts and such. So we get around that by telling the Wired.Razor exactly what it needs. So if we have a (slightly) more advanced view like this:
 
@@ -88,11 +88,11 @@ var templates = new List<Template>
 var renderedView = parser.RenderView(viewName, model);
 ```
 	
-##What Next?##
+## What Next? ##
 
 Well that's up to you. You can use this approach to build email content for your website. Fed up of writing HTML and doing some weird things with string concatenation? Use Wired.Razor to simplify that process. And as the file it uses are Razor templates, you don't need to recompile your app when the sales director comes to you and says "Hey man, I've been talking to the guys at Initrode and they asked if we could make the emails look purple on Fridays. I told them we can do that as we're a forward thinking dynamic company. So I'm gonna need you to come in on Saturday to make this work mmkay?" Well now you just tweak your templates, tell your boss you worked all Saturday while you were really *home with family* | *partying with friends* | *playing videogames*.
 
-##Bonus Round!##
+## Bonus Round! ##
 
 If you do this:
 
@@ -120,7 +120,7 @@ So there's 2 different ways here. They both essentially do the same thing but on
 
 The benefit of using the MVC bound version is that you get the nice helpers that MVC provides you with. So things like `@Html.ActionLink(...)`, `@Url.Action(...)` etc.
 
-##Using MVC##
+## Using MVC ##
 
 So inside an MVC action, it's simple:
 
@@ -133,7 +133,7 @@ public ActionResult Index()
 }
 ```
 
-##Standalone##
+## Standalone ##
 
 Only slightly different really: 
 
@@ -166,7 +166,7 @@ public ActionResult Index()
 }
 ```
 
-##What Else?##
+## What Else? ##
 
 So, images are almost always a huge annoyance in this situation. How does the PDF engine (iTextSharp by the way) know where to get images from? In both the MVC generator and the standalone, there are constructors that take a value for `imageBasePath`. That's a string containing the base path for all images. So say you had in your view something like this:
 
@@ -180,7 +180,7 @@ This causes your views to be rendered slightly differently, the above would beco
 
     <img src="c:\Users\David\Documents\projects\MyApp\images\next-weeks-lottery-numbers.jpg" />
     
-##Anything Else?##
+## Anything Else? ##
 
 I suggest you just give it a try and see how you get on. If you discover a bug then submit an issue and I'll take a look at it. IF you fancy fixing it yourself or adding your own feature, then go right ahead and submit a pull request, I'd absolutely love that!
 
