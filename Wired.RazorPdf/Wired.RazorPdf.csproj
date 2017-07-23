@@ -87,6 +87,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wired.Razor\Wired.Razor.csproj">
+      <Project>{27bd6102-78a0-48cd-abb6-f54f25c2bd13}</Project>
+      <Name>Wired.Razor</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
