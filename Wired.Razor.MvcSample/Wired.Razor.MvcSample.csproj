@@ -157,6 +157,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DemonstrationModel.cs" />
+    <Compile Include="Models\FooterModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +216,7 @@
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <Content Include="Views\Pdf\ControllerlessPdfWithLayout.cshtml" />
     <Content Include="Views\Pdf\ControllerlessPdfWithoutLayout.cshtml" />
+    <Content Include="Views\Pdf\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

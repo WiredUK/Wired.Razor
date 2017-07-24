@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using iTextSharp.text;
 using Wired.Razor.MvcSample.Models;
 using Wired.RazorPdf;
+using Wired.RazorPdf.EventHelpers;
 
 namespace Wired.Razor.MvcSample.Controllers
 {
@@ -34,7 +36,7 @@ namespace Wired.Razor.MvcSample.Controllers
             var pdf = generator.GeneratePdf(
                 (writer, document) =>
                 {
-                    document.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
+                    document.SetPageSize(PageSize.A4.Rotate());
                 }, 
                 GetModel(), 
                 Server.MapPath("~/Views/Pdf/ControllerlessPdfWithoutLayout.cshtml"));
@@ -55,6 +57,14 @@ namespace Wired.Razor.MvcSample.Controllers
                     }
                 }
             };
+
+            var model = new FooterModel
+            {
+                Name = "Unicorns Rule"
+            };
+
+            var helper = new Footer(model, Server.MapPath("~/Views/Pdf/_Footer.cshtml"), 50, 5, 5, 10);
+            generator.AddPageEndEventHelper(helper);
 
             var pdf = generator.GeneratePdf(GetModel(), Server.MapPath("~/Views/Pdf/ControllerlessPdfWithLayout.cshtml"));
             return new FileContentResult(pdf, "application/pdf");

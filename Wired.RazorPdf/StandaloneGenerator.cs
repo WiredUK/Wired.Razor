@@ -10,19 +10,23 @@ using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.html;
 using Wired.Razor;
+using Wired.RazorPdf.EventHelpers;
 
 namespace Wired.RazorPdf
 {
     public class StandaloneGenerator : IGenerator
     {
-        public IParser Parser;
-        public string ImageBasePath;
-        public Margins Margins;
+        public IParser Parser { get; set; }
+        public string ImageBasePath { get; set; }
+        public Margins Margins { get; set; }
+
+        private List<BaseEventHelper> _pageEndEventHelpers;
 
         public StandaloneGenerator(IParser parser, string imageBasePath)
         {
             Parser = parser;
             ImageBasePath = imageBasePath;
+            
         }
 
         public StandaloneGenerator(IParser parser, string imageBasePath, Margins margins)
@@ -34,18 +38,33 @@ namespace Wired.RazorPdf
 
         public IEnumerable<Template> Templates { get; set; }
 
+        public void AddPageEndEventHelper(BaseEventHelper eventHelper)
+        {
+            if (_pageEndEventHelpers == null)
+            {
+                _pageEndEventHelpers = new List<BaseEventHelper>();
+            }
+
+            _pageEndEventHelpers.Add(eventHelper);
+        }
+
         public byte[] GeneratePdf<T>(T model = null, string viewName = null) where T : class
         {
             return GeneratePdf(null, model, viewName);
         }
-
+        
         public byte[] GeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null, string viewName = null) where T : class
+        {
+            return InternalGeneratePdf(configureSettings, model, viewName, _pageEndEventHelpers, Margins);
+        }
+
+        private byte[] InternalGeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null, string viewName = null, List<BaseEventHelper> pageEndEventHelpers = null, Margins margins = null) where T : class
         {
             byte[] output;
 
-            var document = Margins == null
+            var document = margins == null
                 ? new Document()
-                : new Document(Margins.PageSize, Margins.Left, Margins.Right, Margins.Top, Margins.Bottom);
+                : new Document(margins.PageSize, margins.Left, margins.Right, margins.Top, margins.Bottom);
 
             using (document)
             {
@@ -53,6 +72,15 @@ namespace Wired.RazorPdf
                 {
                     var writer = PdfWriter.GetInstance(document, workStream);
                     writer.CloseStream = false;
+
+                    if (pageEndEventHelpers != null)
+                    {
+                        foreach (var eventHelper in pageEndEventHelpers)
+                        {
+                            eventHelper.PdfGeneratorFunc = InternalGeneratePdf;
+                            writer.PageEvent = eventHelper;
+                        }
+                    }
 
                     configureSettings?.Invoke(writer, document);
                     document.Open();
@@ -62,12 +90,12 @@ namespace Wired.RazorPdf
                     using (var reader = new StringReader(renderedView))
                     {
                         var workerInstance = XMLWorkerHelper.GetInstance();
-                        
+
                         var tagProcessors = Tags.GetHtmlTagProcessorFactory();
                         if (!string.IsNullOrEmpty(ImageBasePath))
                         {
                             tagProcessors.RemoveProcessor(HTML.Tag.IMG);
-                            tagProcessors.AddProcessor(new ImageTagProcessor(ImageBasePath), new[] {HTML.Tag.IMG});
+                            tagProcessors.AddProcessor(new ImageTagProcessor(ImageBasePath), new[] { HTML.Tag.IMG });
                         }
 
                         var htmlContext = new HtmlPipelineContext(null);
@@ -88,5 +116,6 @@ namespace Wired.RazorPdf
             }
             return output;
         }
+
     }
 }
