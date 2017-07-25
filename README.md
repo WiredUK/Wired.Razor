@@ -148,7 +148,7 @@ public ActionResult Index()
 
 The difference here is that you are giving the generator an instance of the aformentioned Wired.Razor.Parser class instead of a `ControllerContext` and you specify the full path to the view file. Note that you still need to pass in the templates (`generator.Templates = ...`) as you did above.
 
-##But I want my PDF output to look different!##
+## But I want my PDF output to look different! ##
 
 We have you covered! all of the `GeneratePdf` methods have a second overload that lets you configure how your PDF is generated. For example, let's say you want landscape output, it's only a small change:
 
