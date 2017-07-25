@@ -81,7 +81,7 @@
     <Compile Include="EventHelpers\AggregateHelper.cs" />
     <Compile Include="Snippets\BasePageSnippet.cs" />
     <Compile Include="Snippets\Footer.cs" />
-    <Compile Include="Enums\HelperAlignment.cs" />
+    <Compile Include="Enums\SnippetAlignment.cs" />
     <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Snippets\Header.cs" />
     <Compile Include="Models\IHelperModel.cs" />

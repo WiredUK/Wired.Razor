@@ -10,14 +10,14 @@ namespace Wired.RazorPdf.EventHelpers
 {
     internal class AggregateHelper : PdfPageEventHelper
     {
-        private readonly List<BasePageSnippet> _pageEndEventHelpers;
+        private readonly List<BasePageSnippet> _pageSnippets;
         private readonly Func<Action<PdfWriter, Document>, ISnippetModel, string, List<BasePageSnippet>, Margins, byte[]> _pdfGeneratorFunc;
 
         private int _currentPage;
 
-        public AggregateHelper(List<BasePageSnippet> pageEventHelpers, Func<Action<PdfWriter, Document>, ISnippetModel, string, List<BasePageSnippet>, Margins, byte[]> pdfGeneratorFunc)
+        public AggregateHelper(List<BasePageSnippet> pageSnippets, Func<Action<PdfWriter, Document>, ISnippetModel, string, List<BasePageSnippet>, Margins, byte[]> pdfGeneratorFunc)
         {
-            _pageEndEventHelpers = pageEventHelpers;
+            _pageSnippets = pageSnippets;
             _pdfGeneratorFunc = pdfGeneratorFunc;
         }
 
@@ -25,20 +25,20 @@ namespace Wired.RazorPdf.EventHelpers
         {
             _currentPage++;
 
-            foreach (var helper in _pageEndEventHelpers)
+            foreach (var snippet in _pageSnippets)
             {
-                helper.Model.PageNumber = _currentPage;
+                snippet.Model.PageNumber = _currentPage;
 
-                var snippet = _pdfGeneratorFunc(null, helper.Model, helper.View, null, helper.Margins);
+                var snippetData = _pdfGeneratorFunc(null, snippet.Model, snippet.View, null, snippet.Margins);
 
                 //Insert the newly generated PDF onto the page
-                var helperTemplate = writer.GetImportedPage(new PdfReader(snippet), 1);
+                var snippetTemplate = writer.GetImportedPage(new PdfReader(snippetData), 1);
 
-                var yPosition = helper.HelperAlignment == HelperAlignment.Bottom
+                var yPosition = snippet.SnippetAlignment == SnippetAlignment.Bottom
                     ? 0F
-                    : document.PageSize.Height - helperTemplate.Height;
+                    : document.PageSize.Height - snippetTemplate.Height;
 
-                writer.DirectContent.AddTemplate(helperTemplate, 0, yPosition);
+                writer.DirectContent.AddTemplate(snippetTemplate, 0, yPosition);
             }
             
             base.OnEndPage(writer, document);

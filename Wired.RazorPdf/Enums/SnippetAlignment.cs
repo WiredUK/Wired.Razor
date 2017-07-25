@@ -1,6 +1,6 @@
 namespace Wired.RazorPdf.Enums
 {
-    internal enum HelperAlignment
+    internal enum SnippetAlignment
     {
         Bottom,
         Top

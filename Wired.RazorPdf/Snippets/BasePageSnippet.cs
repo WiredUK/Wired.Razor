@@ -7,15 +7,15 @@ namespace Wired.RazorPdf.Snippets
     {
         internal readonly string View;
         internal readonly Margins Margins;
-        internal readonly HelperAlignment HelperAlignment;
+        internal readonly SnippetAlignment SnippetAlignment;
         internal readonly ISnippetModel Model;
 
-        internal BasePageSnippet(ISnippetModel model, string view, Margins margins, HelperAlignment helperAlignment)
+        internal BasePageSnippet(ISnippetModel model, string view, Margins margins, SnippetAlignment snippetAlignment)
         {
             Model = model;
             View = view;
             Margins = margins;
-            HelperAlignment = helperAlignment;
+            SnippetAlignment = snippetAlignment;
         }
     }
 }

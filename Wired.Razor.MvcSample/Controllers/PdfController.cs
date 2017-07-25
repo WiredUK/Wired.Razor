@@ -19,12 +19,10 @@ namespace Wired.Razor.MvcSample.Controllers
                 Name = "Unicorns Rule"
             };
 
-            var helper = new Footer(model, "~/Views/Pdf/_Footer.cshtml", 50, 5, 5, 10);
-            generator.AddPageEndEventHelper(helper);
+            var snippet = new Footer(model, "~/Views/Pdf/_Footer.cshtml", 50, 5, 5, 10);
+            generator.AddPageSnippet(snippet);
 
             var pdf = generator.GeneratePdf(GetModel(), "PdfWithoutLayout");
-
-            generator.AddPageEndEventHelper(helper);
 
             return new FileContentResult(pdf, "application/pdf");
         }
@@ -38,8 +36,8 @@ namespace Wired.Razor.MvcSample.Controllers
                 Name = "Unicorns Rule"
             };
 
-            var helper = new Footer(model, "~/Views/Pdf/_Footer.cshtml", 50, 5, 5, 10);
-            generator.AddPageEndEventHelper(helper);
+            var snippet = new Footer(model, "~/Views/Pdf/_Footer.cshtml", 50, 5, 5, 10);
+            generator.AddPageSnippet(snippet);
 
             var pdf = generator.GeneratePdf(GetModel(), "PdfWithLayout");
 
@@ -55,8 +53,8 @@ namespace Wired.Razor.MvcSample.Controllers
                 Name = "Unicorns Rule"
             };
 
-            var helper = new Footer(model, Server.MapPath("~/Views/Pdf/_Footer.cshtml"), 50, 5, 5, 10);
-            generator.AddPageEndEventHelper(helper);
+            var snippet = new Footer(model, Server.MapPath("~/Views/Pdf/_Footer.cshtml"), 50, 5, 5, 10);
+            generator.AddPageSnippet(snippet);
 
             var pdf = generator.GeneratePdf(GetModel(), Server.MapPath("~/Views/Pdf/ControllerlessPdfWithoutLayout.cshtml"));
             
@@ -77,10 +75,10 @@ namespace Wired.Razor.MvcSample.Controllers
                 Name = "Unicorns Rule"
             };
 
-            var footerHelper = new Footer(footerModel, Server.MapPath("~/Views/Pdf/_Footer.cshtml"), 50, 5, 5, 10);
-            var headerHelper = new Header(headerModel, Server.MapPath("~/Views/Pdf/_Header.cshtml"), 50, 5, 5, 10);
-            generator.AddPageEndEventHelper(footerHelper);
-            generator.AddPageEndEventHelper(headerHelper);
+            var footerSnippet = new Footer(footerModel, Server.MapPath("~/Views/Pdf/_Footer.cshtml"), 50, 5, 5, 10);
+            var headerSnippet = new Header(headerModel, Server.MapPath("~/Views/Pdf/_Header.cshtml"), 50, 5, 5, 10);
+            generator.AddPageSnippet(footerSnippet);
+            generator.AddPageSnippet(headerSnippet);
 
             var pdf = generator.GeneratePdf(
                 (writer, document) =>
@@ -118,10 +116,10 @@ namespace Wired.Razor.MvcSample.Controllers
                 Name = "Unicorns Rule"
             };
 
-            var footerHelper = new Footer(footerModel, Server.MapPath("~/Views/Pdf/_Footer.cshtml"), 80, 0, 0, 0);
-            var headerHelper = new Header(headerModel, Server.MapPath("~/Views/Pdf/_Header.cshtml"), 80, 0, 0, 0);
-            generator.AddPageEndEventHelper(footerHelper);
-            generator.AddPageEndEventHelper(headerHelper);
+            var footerSnippet = new Footer(footerModel, Server.MapPath("~/Views/Pdf/_Footer.cshtml"), 80, 0, 0, 0);
+            var headerSnippet = new Header(headerModel, Server.MapPath("~/Views/Pdf/_Header.cshtml"), 80, 0, 0, 0);
+            generator.AddPageSnippet(footerSnippet);
+            generator.AddPageSnippet(headerSnippet);
 
             var pdf = generator.GeneratePdf(GetModel(), Server.MapPath("~/Views/Pdf/ControllerlessPdfWithLayout.cshtml"));
             return new FileContentResult(pdf, "application/pdf");

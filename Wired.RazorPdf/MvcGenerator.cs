@@ -22,7 +22,7 @@ namespace Wired.RazorPdf
         public string ImageBasePath { get; set; }
         public Margins Margins;
 
-        private List<BasePageSnippet> _pageEndEventHelpers;
+        private List<BasePageSnippet> _pageSnippets;
 
         public MvcGenerator(ControllerContext controllerContext)
         {
@@ -48,28 +48,28 @@ namespace Wired.RazorPdf
             Margins = margins;
         }
 
-        public void AddPageEndEventHelper(BasePageSnippet eventHelper)
+        public void AddPageSnippet(BasePageSnippet snippet)
         {
-            if (_pageEndEventHelpers == null)
+            if (_pageSnippets == null)
             {
-                _pageEndEventHelpers = new List<BasePageSnippet>();
+                _pageSnippets = new List<BasePageSnippet>();
             }
 
-            _pageEndEventHelpers.Add(eventHelper);
+            _pageSnippets.Add(snippet);
         }
 
         public byte[] GeneratePdf<T>(T model = null, string viewName = null) where T : class
         {
-            return InternalGeneratePdf(null, model, viewName, _pageEndEventHelpers, Margins);
+            return InternalGeneratePdf(null, model, viewName, _pageSnippets, Margins);
         }
 
         public byte[] GeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null, string viewName = null) where T : class
         {
-            return InternalGeneratePdf(configureSettings, model, viewName, _pageEndEventHelpers, Margins);
+            return InternalGeneratePdf(configureSettings, model, viewName, _pageSnippets, Margins);
         }
 
         private byte[] InternalGeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null,
-            string viewName = null, List<BasePageSnippet> pageEndEventHelpers = null, Margins margins = null)
+            string viewName = null, List<BasePageSnippet> pageSnippets = null, Margins margins = null)
             where T : class
         {
             ControllerContext.Controller.ViewData.Model = model;
@@ -87,9 +87,9 @@ namespace Wired.RazorPdf
                     var writer = PdfWriter.GetInstance(document, workStream);
                     writer.CloseStream = false;
 
-                    if (pageEndEventHelpers != null)
+                    if (pageSnippets != null)
                     {
-                        var aggregateHelper = new AggregateHelper(pageEndEventHelpers, InternalGeneratePdf);
+                        var aggregateHelper = new AggregateHelper(pageSnippets, InternalGeneratePdf);
                         writer.PageEvent = aggregateHelper;
                     }
 
