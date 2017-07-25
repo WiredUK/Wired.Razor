@@ -1,6 +1,6 @@
 namespace Wired.RazorPdf.Models
 {
-    public class BaseModel : IHelperModel
+    public class BaseModel : ISnippetModel
     {
         public int PageNumber { get; set; }
     }

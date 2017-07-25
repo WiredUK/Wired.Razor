@@ -11,6 +11,7 @@ using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.html;
 using Wired.Razor;
 using Wired.RazorPdf.EventHelpers;
+using Wired.RazorPdf.Snippets;
 
 namespace Wired.RazorPdf
 {
@@ -20,13 +21,12 @@ namespace Wired.RazorPdf
         public string ImageBasePath { get; set; }
         public Margins Margins { get; set; }
 
-        private List<BaseEventHelper> _pageEndEventHelpers;
+        private List<BasePageSnippet> _pageEndEventHelpers;
 
         public StandaloneGenerator(IParser parser, string imageBasePath)
         {
             Parser = parser;
             ImageBasePath = imageBasePath;
-            
         }
 
         public StandaloneGenerator(IParser parser, string imageBasePath, Margins margins)
@@ -38,11 +38,11 @@ namespace Wired.RazorPdf
 
         public IEnumerable<Template> Templates { get; set; }
 
-        public void AddPageEndEventHelper(BaseEventHelper eventHelper)
+        public void AddPageEndEventHelper(BasePageSnippet eventHelper)
         {
             if (_pageEndEventHelpers == null)
             {
-                _pageEndEventHelpers = new List<BaseEventHelper>();
+                _pageEndEventHelpers = new List<BasePageSnippet>();
             }
 
             _pageEndEventHelpers.Add(eventHelper);
@@ -50,7 +50,7 @@ namespace Wired.RazorPdf
 
         public byte[] GeneratePdf<T>(T model = null, string viewName = null) where T : class
         {
-            return GeneratePdf(null, model, viewName);
+            return InternalGeneratePdf(null, model, viewName, _pageEndEventHelpers, Margins);
         }
         
         public byte[] GeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null, string viewName = null) where T : class
@@ -58,7 +58,7 @@ namespace Wired.RazorPdf
             return InternalGeneratePdf(configureSettings, model, viewName, _pageEndEventHelpers, Margins);
         }
 
-        private byte[] InternalGeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null, string viewName = null, List<BaseEventHelper> pageEndEventHelpers = null, Margins margins = null) where T : class
+        private byte[] InternalGeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null, string viewName = null, List<BasePageSnippet> pageEndEventHelpers = null, Margins margins = null) where T : class
         {
             byte[] output;
 
@@ -75,11 +75,8 @@ namespace Wired.RazorPdf
 
                     if (pageEndEventHelpers != null)
                     {
-                        foreach (var eventHelper in pageEndEventHelpers)
-                        {
-                            eventHelper.PdfGeneratorFunc = InternalGeneratePdf;
-                            writer.PageEvent = eventHelper;
-                        }
+                        var aggregateHelper = new AggregateHelper(pageEndEventHelpers, InternalGeneratePdf);
+                        writer.PageEvent = aggregateHelper;
                     }
 
                     configureSettings?.Invoke(writer, document);

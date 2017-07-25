@@ -1,4 +1,4 @@
-﻿@model Wired.Razor.MvcSample.Models.FooterModel
+﻿@model Wired.Razor.MvcSample.Models.HeaderModel
 @{
     Layout = null;
 }
@@ -8,13 +8,13 @@
 <head>
     <meta name="viewport" content="width=device-width" />
 </head>
-<body>
+<body style="background-color: black; color: white;">
     <div style="float: left;">
         <h2>@Model.Name</h2>
-        <div>(in the footer!)</div>
+        <div>(in the header!)</div>
     </div>
     <div style="float: right">
-        Footer - Page @Model.PageNumber
+        Header - Page @Model.PageNumber
     </div>
 </body>
 </html>

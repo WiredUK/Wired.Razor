@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Web.Mvc;
@@ -10,6 +11,8 @@ using iTextSharp.tool.xml.parser;
 using iTextSharp.tool.xml.pipeline.css;
 using iTextSharp.tool.xml.pipeline.end;
 using iTextSharp.tool.xml.pipeline.html;
+using Wired.RazorPdf.EventHelpers;
+using Wired.RazorPdf.Snippets;
 
 namespace Wired.RazorPdf
 {
@@ -18,6 +21,8 @@ namespace Wired.RazorPdf
         public ControllerContext ControllerContext;
         public string ImageBasePath { get; set; }
         public Margins Margins;
+
+        private List<BasePageSnippet> _pageEndEventHelpers;
 
         public MvcGenerator(ControllerContext controllerContext)
         {
@@ -43,20 +48,37 @@ namespace Wired.RazorPdf
             Margins = margins;
         }
 
+        public void AddPageEndEventHelper(BasePageSnippet eventHelper)
+        {
+            if (_pageEndEventHelpers == null)
+            {
+                _pageEndEventHelpers = new List<BasePageSnippet>();
+            }
+
+            _pageEndEventHelpers.Add(eventHelper);
+        }
+
         public byte[] GeneratePdf<T>(T model = null, string viewName = null) where T : class
         {
-            return GeneratePdf(null, model, viewName);
+            return InternalGeneratePdf(null, model, viewName, _pageEndEventHelpers, Margins);
         }
 
         public byte[] GeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null, string viewName = null) where T : class
+        {
+            return InternalGeneratePdf(configureSettings, model, viewName, _pageEndEventHelpers, Margins);
+        }
+
+        private byte[] InternalGeneratePdf<T>(Action<PdfWriter, Document> configureSettings, T model = null,
+            string viewName = null, List<BasePageSnippet> pageEndEventHelpers = null, Margins margins = null)
+            where T : class
         {
             ControllerContext.Controller.ViewData.Model = model;
 
             byte[] output;
 
-            var document = Margins == null
+            var document = margins == null
                 ? new Document()
-                : new Document(Margins.PageSize, Margins.Left, Margins.Right, Margins.Top, Margins.Bottom);
+                : new Document(margins.PageSize, margins.Left, margins.Right, margins.Top, margins.Bottom);
 
             using (document)
             {
@@ -64,6 +86,12 @@ namespace Wired.RazorPdf
                 {
                     var writer = PdfWriter.GetInstance(document, workStream);
                     writer.CloseStream = false;
+
+                    if (pageEndEventHelpers != null)
+                    {
+                        var aggregateHelper = new AggregateHelper(pageEndEventHelpers, InternalGeneratePdf);
+                        writer.PageEvent = aggregateHelper;
+                    }
 
                     configureSettings?.Invoke(writer, document);
                     document.Open();
