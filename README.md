@@ -110,7 +110,7 @@ parser.Debug = true;
 
 As this will automatically set debug on in your testing environment, but when you compile it for release mode, it'll be back to it's usual speedy self.
 
-#Didn't you say something about PDFs?#
+# Didn't you say something about PDFs? #
 
 Of course I did, and here's how you do it. First you will need the [Nuget package](https://www.nuget.org/packages/Wired.RazorPdf) by using the Nuget Package Manager in Visual Studio or running this in the package manager console:
 
@@ -164,6 +164,24 @@ public ActionResult Index()
 	model, Server.MapPath("~/Views/Pdf/ControllerlessPdfWithoutLayout.cshtml"));
   return new FileContentResult(pdf, "application/pdf");
 }
+```
+
+## But I want to have a different footer/header on every PDF page! ##
+
+We've got you covered there too! It's pretty similar to creating a normal PDF, only a lot smaller and you need to use a special model because we want to track the page numbers.
+
+```c#
+var generator = new StandaloneGenerator(new Parser(), Server.MapPath("~"));
+
+var model = new FooterModel
+{
+  Name = "Unicorns Rule"
+};
+
+var snippet = new Footer(model, Server.MapPath("~/Views/Pdf/_Footer.cshtml"), 50, 5, 5, 10);
+generator.AddPageSnippet(snippet);
+
+var pdf = generator.GeneratePdf(GetModel(), Server.MapPath("~/Views/Pdf/ControllerlessPdfWithoutLayout.cshtml"));
 ```
 
 ## What Else? ##
