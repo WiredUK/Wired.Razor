@@ -2,7 +2,7 @@
 
 namespace Wired.Razor.MvcSample.Models
 {
-    public class FooterModel : BaseFooterModel
+    public class FooterModel : BaseModel
     {
         public string Name { get; set; }
     }
