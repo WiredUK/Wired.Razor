@@ -184,6 +184,14 @@ generator.AddPageSnippet(snippet);
 var pdf = generator.GeneratePdf(GetModel(), Server.MapPath("~/Views/Pdf/ControllerlessPdfWithoutLayout.cshtml"));
 ```
 
+## How do I insert a new page into my PDF? ##
+
+You do this in the same way you would in an iTextSharp document:
+
+```html
+<div style="page-break-before:always">&nbsp;</div>
+```
+
 ## What Else? ##
 
 So, images are almost always a huge annoyance in this situation. How does the PDF engine (iTextSharp by the way) know where to get images from? In both the MVC generator and the standalone, there are constructors that take a value for `imageBasePath`. That's a string containing the base path for all images. So say you had in your view something like this:
